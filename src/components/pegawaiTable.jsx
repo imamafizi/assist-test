@@ -1,23 +1,53 @@
-import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import {
-  IconButton,
+  Button,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  TextField,
 } from "@mui/material";
-import { deletePegawai } from "../redux/pegawaiSlice";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deletePegawai,
+  fetchPegawai,
+  updatePegawai,
+} from "../redux/pegawaiSlice";
 
-function PegawaiTable({ pegawai }) {
+function PegawaiTable() {
+  const pegawai = useSelector((state) => state.pegawai.entities);
   const dispatch = useDispatch();
+  const [updatedPegawai, setUpdatedPegawai] = useState({});
+
+  useEffect(() => {
+    dispatch(fetchPegawai());
+  }, [dispatch]);
 
   const handleDelete = (id) => {
     dispatch(deletePegawai(id));
+  };
+
+  const handleUpdate = (id) => {
+    dispatch(updatePegawai({ id, pegawai: updatedPegawai[id] }));
+    setUpdatedPegawai((prevState) => ({
+      ...prevState,
+      [id]: {},
+    }));
+  };
+
+  const handleChange = (event, id) => {
+    const { name, value } = event.target;
+    setUpdatedPegawai((prevState) => ({
+      ...prevState,
+      [id]: {
+        ...prevState[id],
+        [name]: value,
+      },
+    }));
   };
 
   return (
@@ -26,7 +56,7 @@ function PegawaiTable({ pegawai }) {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>Nama</TableCell>
+            <TableCell>pegawai</TableCell>
             <TableCell>Jalan</TableCell>
             <TableCell>Provinsi</TableCell>
             <TableCell>Kota</TableCell>
@@ -38,18 +68,65 @@ function PegawaiTable({ pegawai }) {
           {pegawai.map((pegawai) => (
             <TableRow key={pegawai.id}>
               <TableCell>{pegawai.id}</TableCell>
-              <TableCell>{pegawai.nama}</TableCell>
-              <TableCell>{pegawai.jalan}</TableCell>
-              <TableCell>{pegawai.provinsi}</TableCell>
-              <TableCell>{pegawai.kota}</TableCell>
-              <TableCell>{pegawai.kecamatan}</TableCell>
               <TableCell>
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => handleDelete(pegawai.id)}>
-                  <DeleteIcon />
-                </IconButton>
+                <TextField
+                  name="nama"
+                  value={updatedPegawai[pegawai.id]?.nama || pegawai.nama}
+                  onChange={(e) => handleChange(e, pegawai.id)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="New Nama"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  name="jalan"
+                  value={updatedPegawai[pegawai.id]?.jalan || pegawai.jalan}
+                  onChange={(e) => handleChange(e, pegawai.id)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="New Jalan"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  name="provinsi"
+                  value={
+                    updatedPegawai[pegawai.id]?.provinsi ||
+                    pegawai.provinsi.name
+                  }
+                  onChange={(e) => handleChange(e, pegawai.id)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="New Provinsi"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  name="kota"
+                  value={updatedPegawai[pegawai.id]?.kota || pegawai.kota}
+                  onChange={(e) => handleChange(e, pegawai.id)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="New Kota"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  name="kecamatan"
+                  value={
+                    updatedPegawai[pegawai.id]?.kecamatan ||
+                    pegawai.kecamatan.name
+                  }
+                  onChange={(e) => handleChange(e, pegawai.id)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="New Kecamatan"
+                />
+              </TableCell>
+              <TableCell>
+                <Button onClick={() => handleUpdate(pegawai.id)}>Update</Button>
+                <Button onClick={() => handleDelete(pegawai.id)}>Delete</Button>
               </TableCell>
             </TableRow>
           ))}

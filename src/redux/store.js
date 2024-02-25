@@ -1,7 +1,8 @@
-import { createStore, applyMiddleware } from "redux";
-import rootReducer from "./pegawaiReducer";
-import { thunk } from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
+import pegawaiSlice from "./pegawaiSlice";
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
-export default store;
+export default configureStore({
+  reducer: {
+    pegawai: pegawaiSlice,
+  },
+});

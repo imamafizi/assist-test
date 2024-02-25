@@ -7,7 +7,6 @@ export const fetchPegawai = createAsyncThunk(
     const response = await axios.get(
       "https://61601920faa03600179fb8d2.mockapi.io/pegawai"
     );
-    console.log(response, "pantek");
     return response.data;
   }
 );
@@ -44,11 +43,16 @@ export const deletePegawai = createAsyncThunk(
   }
 );
 
-export const addpegawai = createAsyncThunk("pegawai/addpegawai", async (id) => {
-  await axios.add(`https://61601920faa03600179fb8d2.mockapi.io/pegawai`);
-  return id;
-});
-
+export const addpegawai = createAsyncThunk(
+  "pegawai/addpegawai",
+  async (pegawai) => {
+    const response = await axios.post(
+      "https://www.emsifa.com/api-wilayah-indonesia/api/pegawais",
+      pegawai
+    );
+    return response.data;
+  }
+);
 const pegawaiSlice = createSlice({
   name: "pegawai",
   initialState: {
@@ -56,6 +60,7 @@ const pegawaiSlice = createSlice({
     status: "idle",
     error: null,
   },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPegawai.pending, (state) => {
@@ -90,3 +95,31 @@ const pegawaiSlice = createSlice({
 });
 
 export default pegawaiSlice.reducer;
+
+// import { createSlice } from '@reduxjs/toolkit'
+
+// export const usersSlice = createSlice({
+//   name: 'users',
+//   initialState: {
+//     id: null,
+//     username: "",
+//     email: "",
+//   },
+//   reducers: {
+//     loginAction: (state, action) => {
+//       state.id = action.payload.id;
+//       state.username = action.payload.username;
+//       state.email = action.payload.email;
+//     },
+//     logoutAction: (state) => {
+//       state.id = null;
+//       state.username = "";
+//       state.email = "";
+//     },
+//   },
+// })
+
+// // Action creators are generated for each case reducer function
+// export const { loginAction, logoutAction } = usersSlice.actions;
+
+// export default usersSlice.reducer
