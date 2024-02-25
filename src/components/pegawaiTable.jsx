@@ -50,6 +50,8 @@ function PegawaiTable() {
     }));
   };
 
+  console.log(pegawai, "pegawai");
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -104,7 +106,9 @@ function PegawaiTable() {
               <TableCell>
                 <TextField
                   name="kota"
-                  value={updatedPegawai[pegawai.id]?.kota || pegawai.kota}
+                  value={
+                    updatedPegawai[pegawai.id]?.kota.name || pegawai.kota.name
+                  }
                   onChange={(e) => handleChange(e, pegawai.id)}
                   variant="outlined"
                   size="small"
